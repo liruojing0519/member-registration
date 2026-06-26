@@ -69,6 +69,37 @@ body {
   border-top: 1px dashed #ddd;
   margin: 24px 0;
 }
+.data-summary {
+  text-align: left;
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 8px;
+}
+.data-summary h4 {
+  font-size: 14px;
+  color: #8B0000;
+  margin-bottom: 10px;
+}
+.data-summary table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.data-summary table td {
+  padding: 6px 4px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+.data-summary table td:first-child {
+  color: #999;
+  width: 80px;
+  white-space: nowrap;
+}
+.data-summary table td:last-child {
+  color: #333;
+  font-weight: 500;
+}
 .payment-section {
   background: #fdfaf5;
   border-radius: 12px;
@@ -163,7 +194,20 @@ body {
       </svg>
     </div>
     <h2>登记信息已成功提交！</h2>
-    <p class="hint">您的会员申请信息已收到，<br>请在下方完成会员费缴纳。</p>
+    <p class="hint">您的会员申请信息已收到，<br>请在下方核对信息并完成会员费缴纳。</p>
+
+    <!-- 登记信息摘要（从localStorage读取） -->
+    <div class="data-summary" id="dataSummary">
+      <h4>📋 您的登记信息</h4>
+      <table>
+        <tr><td>姓名</td><td id="d_name">-</td></tr>
+        <tr><td>性别</td><td id="d_gender">-</td></tr>
+        <tr><td>手机号码</td><td id="d_phone">-</td></tr>
+        <tr><td>会员类别</td><td id="d_type">-</td></tr>
+        <tr><td>工作单位</td><td id="d_org">-</td></tr>
+        <tr><td>专业领域</td><td id="d_field">-</td></tr>
+      </table>
+    </div>
 
     <hr class="divider">
 
@@ -193,6 +237,24 @@ body {
     <a href="index.html" class="close-btn">完成</a>
   </div>
 </div>
+
+<script>
+// 从 localStorage 读取登记信息并展示
+(function() {
+  var raw = localStorage.getItem('member_form_data');
+  if (raw) {
+    try {
+      var d = JSON.parse(raw);
+      document.getElementById('d_name').textContent = d['姓名'] || '-';
+      document.getElementById('d_gender').textContent = d['性别'] || '-';
+      document.getElementById('d_phone').textContent = d['手机号码'] || '-';
+      document.getElementById('d_type').textContent = d['申请类别'] || '-';
+      document.getElementById('d_org').textContent = d['工作单位'] || '-';
+      document.getElementById('d_field').textContent = d['专业领域'] || '-';
+    } catch(e) {}
+  }
+})();
+</script>
 
 </body>
 </html>
