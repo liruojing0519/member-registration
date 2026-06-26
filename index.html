@@ -160,13 +160,7 @@ input[type="radio"], input[type="checkbox"] {
     <div class="subtitle">CHINA CULTURE PROMOTION SOCIETY · TIANJIN</div>
   </div>
 
-  <form id="memberForm" action="https://formsubmit.co/zhonghuawencuhu.tj@gmail.com" method="POST">
-    <!-- FormSubmit 配置 -->
-    <input type="hidden" name="_subject" value="【会员登记】新会员申请">
-    <input type="hidden" name="_template" value="table">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_next" value="">
-
+  <form id="memberForm">
     <div class="form-body">
 
       <!-- 基本信息 -->
@@ -315,14 +309,33 @@ input[type="radio"], input[type="checkbox"] {
 </div>
 
 <script>
-// 提交后跳转到缴费页面
-document.querySelector('input[name="_next"]').value = window.location.origin + window.location.pathname.replace('index.html','') + 'thankyou.html';
-
-// 表单提交处理
+// 表单提交：保存数据到 localStorage，跳转缴费页
 document.getElementById('memberForm').addEventListener('submit', function(e) {
+  e.preventDefault();
   var btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.textContent = '提交中...';
+
+  // 收集所有表单数据
+  var fd = new FormData(this);
+  var data = {};
+  for (var pair of fd.entries()) {
+    var key = pair[0];
+    var val = pair[1];
+    if (data[key]) {
+      // 多选字段（checkbox）合并为逗号分隔
+      data[key] = data[key] + '、' + val;
+    } else {
+      data[key] = val;
+    }
+  }
+
+  // 保存到 localStorage
+  localStorage.setItem('member_form_data', JSON.stringify(data));
+  localStorage.setItem('member_submit_time', new Date().toLocaleString('zh-CN'));
+
+  // 跳转到缴费页
+  window.location.href = 'thankyou.html';
 });
 </script>
 
